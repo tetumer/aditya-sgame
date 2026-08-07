@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AS Studio</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1f1f1f;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 3px solid #ff4757;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #ff4757, #ffa502);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        }
+
+        .logo-text {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .logo-text span {
+            color: #ff4757;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        nav button {
+            background-color: #2f3542;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        nav button.active {
+            background-color: #ff4757;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .game-card {
+            display: none;
+            background-color: #1f1f1f;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 360px;
+            width: 100%;
+        }
+
+        .game-card.active {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #2ed573;
+            font-weight: bold;
+        }
+
+        /* TIC TAC TOE */
+        .ttt-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .ttt-btn {
+            background-color: #2f3542;
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 8px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        /* CANVAS AREA */
+        canvas {
+            background: #000;
+            border: 2px solid #2f3542;
+            border-radius: 8px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* DPAD CONTROLS */
+        .dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 50px);
+            grid-template-rows: repeat(2, 50px);
+            gap: 6px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .ctrl-btn {
+            background-color: #2f3542;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ctrl-btn:active {
+            background-color: #ff4757;
+        }
+
+        .jump-btn {
+            background-color: #2e86de;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .jump-btn:active {
+            background-color: #ff4757;
+        }
+
+        .action-btn {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-top: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #1f1f1f;
+            color: #a4b0be;
+            font-size: 0.85rem;
+        }
+
+        .credit-tag {
+            font-size: 0.75rem;
+            color: #747d8c;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">AS</div>
+            <div class="logo-text">AS <span>STUDIO</span></div>
+        </div>
+
+        <nav>
+            <button id="nav-ttt" class="active" onclick="showTab('ttt')">Tic-Tac-Toe</button>
+            <button id="nav-snake" onclick="showTab('snake')">Snake</button>
+            <button id="nav-runner" onclick="showTab('runner')">Runner</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 1. TIC TAC TOE -->
+        <div id="tab-ttt" class="game-card active">
+            <div id="ttt-msg" class="score-display">Your Turn (X)</div>
+            <div class="ttt-grid">
+                <button class="ttt-btn" onclick="playTTT(0)"></button>
+                <button class="ttt-btn" onclick="playTTT(1)"></button>
+                <button class="ttt-btn" onclick="playTTT(2)"></button>
+                <button class="ttt-btn" onclick="playTTT(3)"></button>
+                <button class="ttt-btn" onclick="playTTT(4)"></button>
+                <button class="ttt-btn" onclick="playTTT(5)"></button>
+                <button class="ttt-btn" onclick="playTTT(6)"></button>
+                <button class="ttt-btn" onclick="playTTT(7)"></button>
+                <button class="ttt-btn" onclick="playTTT(8)"></button>
+            </div>
+            <button class="action-btn" onclick="initTTT()">Restart Game</button>
+        </div>
+
+        <!-- 2. SNAKE GAME -->
+        <div id="tab-snake" class="game-card">
+            <div id="snake-score" class="score-display">Score: 0</div>
+            <canvas id="snakeCanvas" width="280" height="280"></canvas>
+            
+            <div class="dpad-container">
+                <div></div>
+                <button class="ctrl-btn" onclick="dirSnake('UP')">⬆️</button>
+                <div></div>
+                <button class="ctrl-btn" onclick="dirSnake('LEFT')">⬅️</button>
+                <button class="ctrl-btn" onclick="dirSnake('DOWN')">⬇️</button>
+                <button class="ctrl-btn" onclick="dirSnake('RIGHT')">➡️</button>
+            </div>
+            <button class="action-btn" onclick="initSnake()">Start / Reset</button>
+        </div>
+
+        <!-- 3. RUNNER GAME -->
+        <div id="tab-runner" class="game-card">
+            <div id="runner-score" class="score-display">Score: 0</div>
+            <canvas id="runnerCanvas" width="280" height="150"></canvas>
+            <button class="jump-btn" onclick="jumpRunner()">JUMP 🦘</button>
+            <button class="action-btn" onclick="initRunner()">Start / Reset</button>
+        </div>
+    </main>
+
+    <footer>
+        <div>&copy; 2026 AS Studio. All Rights Reserved.</div>
+        <div class="credit-tag">made by aditya</div>
+    </footer>
+
+    <script>
+        // Global Navigation
+        function showTab(tabId) {
+            stopGames();
+            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+
+            if (tabId === 'ttt') initTTT();
+            if (tabId === 'snake') initSnake();
+            if (tabId === 'runner') initRunner();
+        }
+
+        function stopGames() {
+            if (snakeLoop) clearInterval(snakeLoop);
+            if (runnerLoop) clearInterval(runnerLoop);
+        }
+
+        /* --- TIC TAC TOE ENGINE --- */
+        let board = ["","","","","","","","",""];
+        let tttActive = true;
+
+        function initTTT() {
+            board = ["","","","","","","","",""];
+            tttActive = true;
+            document.getElementById('ttt-msg').textContent = "Your Turn (X)";
+            let btns = document.querySelectorAll('.ttt-btn');
+            btns.forEach(b => { b.textContent = ""; b.style.color = "#fff"; });
+        }
+
+        function playTTT(i) {
+            if (board[i] !== "" || !tttActive) return;
+            board[i] = "X";
+            updateTTTBoard();
+
+            if (checkTTTWin("X")) {
+                document.getElementById('ttt-msg').textContent = "You Win! 🎉";
+                tttActive = false;
+                return;
+            }
+            if (!board.includes("")) {
+                document.getElementById('ttt-msg').textContent = "Draw Game!";
+                tttActive = false;
+                return;
+            }
+
+            // AI Move
+            tttActive = false;
+            document.getElementById('ttt-msg').textContent = "AI Turn...";
+            setTimeout(() => {
+                let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
+                if (empty.length > 0) {
+                    let move = empty[Math.floor(Math.random() * empty.length)];
+                    board[move] = "O";
+                    updateTTTBoard();
+
+                    if (checkTTTWin("O")) {
+                        document.getElementById('ttt-msg').textContent = "AI Wins! 🤖";
+                    } else if (!board.includes("")) {
+                        document.getElementById('ttt-msg').textContent = "Draw Game!";
+                    } else {
+                        document.getElementById('ttt-msg').textContent = "Your Turn (X)";
+                        tttActive = true;
+                    }
+                }
+            }, 250);
+        }
+
+        function updateTTTBoard() {
+            let btns = document.querySelectorAll('.ttt-btn');
+            btns.forEach((b, idx) => {
+                b.textContent = board[idx];
+                b.style.color = board[idx] === "X" ? "#ff4757" : "#ffa502";
+            });
+        }
+
+        function checkTTTWin(p) {
+            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            return wins.some(w => w.every(idx => board[idx] === p));
+        }
+
+        /* --- SNAKE ENGINE --- */
+        let snakeCanvas = document.getElementById("snakeCanvas");
+        let sCtx = snakeCanvas.getContext("2d");
+        let snake, food, sDir, snakeScore, snakeLoop;
+
+        function initSnake() {
+            stopGames();
+            snake = [{x: 140, y: 140}, {x: 120, y: 140}];
+            sDir = "RIGHT";
+            snakeScore = 0;
+            document.getElementById('snake-score').textContent = "Score: " + snakeScore;
+            spawnFood();
+            snakeLoop = setInterval(stepSnake, 130);
+        }
+
+        function dirSnake(d) {
+            if (d === "LEFT" && sDir !== "RIGHT") sDir = "LEFT";
+            if (d === "UP" && sDir !== "DOWN") sDir = "UP";
+            if (d === "RIGHT" && sDir !== "LEFT") sDir = "RIGHT";
+            if (d === "DOWN" && sDir !== "UP") sDir = "DOWN";
+        }
+
+        function spawnFood() {
+            food = {
+                x: Math.floor(Math.random() * 14) * 20,
+                y: Math.floor(Math.random() * 14) * 20
+            };
+        }
+
+        function stepSnake() {
+            let head = {x: snake[0].x, y: snake[0].y};
+            if (sDir === "LEFT") head.x -= 20;
+            if (sDir === "UP") head.y -= 20;
+            if (sDir === "RIGHT") head.x += 20;
+            if (sDir === "DOWN") head.y += 20;
+
+            if (head.x < 0 || head.x >= 280 || head.y < 0 || head.y >= 280 || snake.some(s => s.x === head.x && s.y === head.y)) {
+                stopGames();
+                document.getElementById('snake-score').textContent = "Game Over! Score: " + snakeScore;
+                return;
+            }
+
+            snake.unshift(head);
+            if (head.x === food.x && head.y === food.y) {
+                snakeScore += 10;
+                document.getElementById('snake-score').textContent = "Score: " + snakeScore;
+                spawnFood();
+            } else {
+                snake.pop();
+            }
+
+            sCtx.fillStyle = "#000";
+            sCtx.fillRect(0, 0, 280, 280);
+            sCtx.fillStyle = "#ff4757";
+            sCtx.fillRect(food.x, food.y, 18, 18);
+            sCtx.fillStyle = "#2ed573";
+            snake.forEach(s => sCtx.fillRect(s.x, s.y, 18, 18));
+        }
+
+        /* --- RUNNER ENGINE --- */
+        let runnerCanvas = document.getElementById("runnerCanvas");
+        let rCtx = runnerCanvas.getContext("2d");
+        let ry, rVel, obstacles, runnerScore, runnerLoop;
+
+        function initRunner() {
+            stopGames();
+            ry = 110;
+            rVel = 0;
+            obstacles = [];
+            runnerScore = 0;
+            document.getElementById('runner-score').textContent = "Score: " + runnerScore;
+            runnerLoop = setInterval(stepRunner, 30);
+        }
+
+        function jumpRunner() {
+            if (ry >= 110) rVel = -9;
+        }
+
+        function stepRunner() {
+            rVel += 0.6;
+            ry += rVel;
+            if (ry > 110) { ry = 110; rVel = 0; }
+
+            if (Math.random() < 0.02 && (obstacles.length === 0 || obstacles[obstacles.length - 1].x < 180)) {
+                obstacles.push({x: 280, w: 15, h: 20});
+            }
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= 4;
+                if (obstacles[i].x + obstacles[i].w < 0) {
+                    obstacles.splice(i, 1);
+                    runnerScore += 1;
+                    document.getElementById('runner-score').textContent = "Score: " + runnerScore;
+                }
+                if (obstacles[i] && 40 < obstacles[i].x + obstacles[i].w && 60 > obstacles[i].x && ry + 20 > 130 - obstacles[i].h) {
+                    stopGames();
+                    document.getElementById('runner-score').textContent = "Game Over! Score: " + runnerScore;
+                    return;
+                }
+            }
+
+            rCtx.fillStyle = "#000";
+            rCtx.fillRect(0, 0, 280, 150);
+            rCtx.fillStyle = "#2f3542";
+            rCtx.fillRect(0, 130, 280, 20);
+            rCtx.fillStyle = "#ffa502";
+            rCtx.fillRect(40, ry, 20, 20);
+            rCtx.fillStyle = "#ff4757";
+            obstacles.forEach(o => rCtx.fillRect(o.x, 130 - o.h, o.w, o.h));
+        }
+
+        // Keyboard Binds
+        window.addEventListener("keydown", e => {
+            if (e.key === "ArrowUp") { dirSnake("UP"); jumpRunner(); }
+            if (e.key === "ArrowDown") dirSnake("DOWN");
+            if (e.key === "ArrowLeft") dirSnake("LEFT");
+            if (e.key === "ArrowRight") dirSnake("RIGHT");
+            if (e.key === " ") jumpRunner();
+        });
+
+        // Default Load
+        initTTT();
+    </script>
+</body>
+</html>
