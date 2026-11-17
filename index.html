@@ -181,39 +181,405 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);text-a
 </div>
 
 <script>
-
 document.getElementById('year').textContent = new Date().getFullYear();
+
 const search = document.getElementById('videoSearch');
+
 search.addEventListener('input', () => {
-  const q = search.value.trim().toLowerCase();
-  const cards = [...document.querySelectorAll('.searchable .video')];
-  let shown = 0;
-  cards.forEach(card => {
-    const match = (card.dataset.title || '').includes(q);
-    card.style.display = match ? '' : 'none';
-    if (match) shown++;
-  });
-  document.getElementById('videoEmpty').style.display = shown ? 'none' : 'block';
+    const q = search.value.trim().toLowerCase();
+    const cards = [...document.querySelectorAll('.searchable .video')];
+    let shown = 0;
+
+    cards.forEach(card => {
+        const match = (card.dataset.title || '').includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) shown++;
+    });
+
+    document.getElementById('videoEmpty').style.display =
+        shown ? 'none' : 'block';
+});
+
+let board = ["", "", "", "", "", "", "", "", ""];
+let tttActive = true;
+
+let snake, food, sDir, snakeScore, snakeLoop, sCtx;
+let ry, rVel, obstacles, runnerScore, runnerLoop, rCtx;
+
+
+// Switch between the two websites
+function showSite(which) {
+    stopGames();
+
+    document.getElementById("fc-site").style.display =
+        which === "fc" ? "block" : "none";
+
+    document.getElementById("games-site").style.display =
+        which === "games" ? "flex" : "none";
+
+    if (which === "games") {
+        initTTT();
+    }
+
+    window.scrollTo(0, 0);
+}
+
+
+// Switch between mini-games
+function showGameTab(tabId) {
+    stopGames();
+
+    document.querySelectorAll(".games-site .game-card")
+        .forEach(c => c.classList.remove("active"));
+
+    document.querySelectorAll(".games-site .games-nav button")
+        .forEach(b => b.classList.remove("active"));
+
+    document.getElementById("games-tab-" + tabId)
+        .classList.add("active");
+
+    document.getElementById("games-nav-" + tabId)
+        .classList.add("active");
+
+    if (tabId === "ttt") initTTT();
+    if (tabId === "snake") initSnake();
+    if (tabId === "runner") initRunner();
+}
+
+
+// Stop running game loops
+function stopGames() {
+    if (snakeLoop) clearInterval(snakeLoop);
+    if (runnerLoop) clearInterval(runnerLoop);
+}
+
+
+// ==============================
+// TIC-TAC-TOE
+// ==============================
+
+function initTTT() {
+    board = ["", "", "", "", "", "", "", "", ""];
+    tttActive = true;
+
+    document.getElementById("ttt-msg").textContent =
+        "Your Turn (X)";
+
+    document.querySelectorAll(".games-site .ttt-btn")
+        .forEach(b => {
+            b.textContent = "";
+            b.style.color = "#fff";
+        });
+}
+
+
+function playTTT(i) {
+    if (board[i] !== "" || !tttActive) return;
+
+    board[i] = "X";
+    updateTTTBoard();
+
+    if (checkTTTWin("X")) {
+        document.getElementById("ttt-msg").textContent = "You Win!";
+        tttActive = false;
+        return;
+    }
+
+    if (!board.includes("")) {
+        document.getElementById("ttt-msg").textContent = "Draw Game!";
+        tttActive = false;
+        return;
+    }
+
+    tttActive = false;
+    document.getElementById("ttt-msg").textContent = "AI Turn...";
+
+    setTimeout(() => {
+        let empty = board
+            .map((v, n) => v === "" ? n : null)
+            .filter(v => v !== null);
+
+        if (empty.length) {
+            let move = empty[Math.floor(Math.random() * empty.length)];
+
+            board[move] = "O";
+            updateTTTBoard();
+
+            if (checkTTTWin("O")) {
+                document.getElementById("ttt-msg").textContent = "AI Wins!";
+            }
+            else if (!board.includes("")) {
+                document.getElementById("ttt-msg").textContent = "Draw Game!";
+            }
+            else {
+                document.getElementById("ttt-msg").textContent =
+                    "Your Turn (X)";
+                tttActive = true;
+            }
+        }
+    }, 250);
+}
+
+
+function updateTTTBoard() {
+    document.querySelectorAll(".games-site .ttt-btn")
+        .forEach((b, n) => {
+            b.textContent = board[n];
+
+            b.style.color = board[n] === "X"
+                ? "#ff4757"
+                : "#ffa502";
+        });
+}
+
+
+function checkTTTWin(p) {
+    const wins = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    return wins.some(w => w.every(n => board[n] === p));
+}
+
+
+// ==============================
+// SNAKE
+// ==============================
+
+function initSnake() {
+    stopGames();
+
+    snake = [
+        { x: 140, y: 140 },
+        { x: 120, y: 140 }
+    ];
+
+    sDir = "RIGHT";
+    snakeScore = 0;
+
+    document.getElementById("snake-score").textContent = "Score: 0";
+
+    spawnFood();
+
+    sCtx = document.getElementById("snakeCanvas").getContext("2d");
+
+    drawSnake();
+
+    snakeLoop = setInterval(stepSnake, 130);
+}
+
+
+function dirSnake(d) {
+    if (d === "LEFT" && sDir !== "RIGHT") sDir = "LEFT";
+    if (d === "UP" && sDir !== "DOWN") sDir = "UP";
+    if (d === "RIGHT" && sDir !== "LEFT") sDir = "RIGHT";
+    if (d === "DOWN" && sDir !== "UP") sDir = "DOWN";
+}
+
+
+function spawnFood() {
+    food = {
+        x: Math.floor(Math.random() * 14) * 20,
+        y: Math.floor(Math.random() * 14) * 20
+    };
+}
+
+
+function drawSnake() {
+    sCtx.fillStyle = "#000";
+    sCtx.fillRect(0, 0, 280, 280);
+
+    sCtx.fillStyle = "#ff4757";
+    sCtx.fillRect(food.x, food.y, 18, 18);
+
+    sCtx.fillStyle = "#2ed573";
+
+    snake.forEach(s => {
+        sCtx.fillRect(s.x, s.y, 18, 18);
+    });
+}
+
+
+function stepSnake() {
+    let head = {
+        x: snake[0].x,
+        y: snake[0].y
+    };
+
+    if (sDir === "LEFT") head.x -= 20;
+    if (sDir === "UP") head.y -= 20;
+    if (sDir === "RIGHT") head.x += 20;
+    if (sDir === "DOWN") head.y += 20;
+
+    if (
+        head.x < 0 ||
+        head.x >= 280 ||
+        head.y < 0 ||
+        head.y >= 280 ||
+        snake.some(s => s.x === head.x && s.y === head.y)
+    ) {
+        stopGames();
+
+        document.getElementById("snake-score").textContent =
+            "Game Over! Score: " + snakeScore;
+
+        return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+        snakeScore += 10;
+
+        document.getElementById("snake-score").textContent =
+            "Score: " + snakeScore;
+
+        spawnFood();
+    }
+    else {
+        snake.pop();
+    }
+
+    drawSnake();
+}
+
+
+// ==============================
+// RUNNER
+// ==============================
+
+function initRunner() {
+    stopGames();
+
+    ry = 110;
+    rVel = 0;
+    obstacles = [];
+    runnerScore = 0;
+
+    document.getElementById("runner-score").textContent = "Score: 0";
+
+    rCtx = document.getElementById("runnerCanvas").getContext("2d");
+
+    drawRunner();
+
+    runnerLoop = setInterval(stepRunner, 30);
+}
+
+
+function jumpRunner() {
+    if (ry >= 110) {
+        rVel = -9;
+    }
+}
+
+
+function drawRunner() {
+    rCtx.fillStyle = "#000";
+    rCtx.fillRect(0, 0, 280, 150);
+
+    rCtx.fillStyle = "#2f3542";
+    rCtx.fillRect(0, 130, 280, 20);
+
+    rCtx.fillStyle = "#ffa502";
+    rCtx.fillRect(40, ry, 20, 20);
+
+    rCtx.fillStyle = "#ff4757";
+
+    obstacles.forEach(o => {
+        rCtx.fillRect(o.x, 130 - o.h, o.w, o.h);
+    });
+}
+
+
+function stepRunner() {
+    rVel += 0.6;
+    ry += rVel;
+
+    if (ry > 110) {
+        ry = 110;
+        rVel = 0;
+    }
+
+    if (
+        Math.random() < 0.02 &&
+        (obstacles.length === 0 ||
+            obstacles[obstacles.length - 1].x < 180)
+    ) {
+        obstacles.push({
+            x: 280,
+            w: 15,
+            h: 20
+        });
+    }
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        obstacles[i].x -= 4;
+
+        if (obstacles[i].x + obstacles[i].w < 0) {
+            obstacles.splice(i, 1);
+
+            runnerScore++;
+
+            document.getElementById("runner-score").textContent =
+                "Score: " + runnerScore;
+
+            continue;
+        }
+
+        if (
+            40 < obstacles[i].x + obstacles[i].w &&
+            60 > obstacles[i].x &&
+            ry + 20 > 130 - obstacles[i].h
+        ) {
+            stopGames();
+
+            document.getElementById("runner-score").textContent =
+                "Game Over! Score: " + runnerScore;
+
+            return;
+        }
+    }
+
+    drawRunner();
+}
+
+
+// ==============================
+// KEYBOARD CONTROLS
+// ==============================
+
+window.addEventListener("keydown", e => {
+    if (document.getElementById("games-site").style.display === "flex") {
+
+        if (e.key === "ArrowUp") {
+            dirSnake("UP");
+            jumpRunner();
+        }
+
+        if (e.key === "ArrowDown") dirSnake("DOWN");
+        if (e.key === "ArrowLeft") dirSnake("LEFT");
+        if (e.key === "ArrowRight") dirSnake("RIGHT");
+
+        if (e.key === " ") jumpRunner();
+    }
 });
 
 
-let board=["","","","","","","","",""],tttActive=true;
-let snake,food,sDir,snakeScore,snakeLoop,sCtx;
-let ry,rVel,obstacles,runnerScore,runnerLoop,rCtx;
+// ==============================
+// DIRECT URL SUPPORT
+// ==============================
 
-function showSite(which){
-  stopGames();
-  document.getElementById("fc-site").style.display=which==="fc"?"block":"none";
-  document.getElementById("games-site").style.display=which==="games"?"flex":"none";
-  if(which==="games")initTTT();
-  window.scrollTo(0,0);
+if (window.location.hash === "#games-site") {
+    showSite("games");
 }
-function showGameTab(tabId){
-  stopGames();
-  document.querySelectorAll(".games-site .game-card").forEach(c=>c.classList.remove("active"));
-  document.querySelectorAll(".games-site .games-nav button").forEach(b=>b.classList.remove("active"));
-  document.getElementById("games-tab-"+tabId).classList.add("active");
-  document.getElementById("games-nav-"+tabId).classList.add("active");
-  if(tabId==="ttt")initTTT();if(tabId==="snake")initSnake();if(tabId==="runner")initRunner();
-}
-function stopGames(){if(snakeLoop)clearInterval(snakeLoop);if(runnerLo
+
+</script>
+</body> 
+</html>
