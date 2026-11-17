@@ -1,488 +1,219 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AS Studio</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fc Aditya BD | AS Studio</title>
+<style>
 
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+:root{--bg:#080b12;--panel:#111827;--panel2:#0d1422;--text:#f4f7fb;--muted:#aab5c5;--red:#ff344f;--blue:#2d8cff;--line:#263449}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 85% 0%,#14294a 0,transparent 30%),radial-gradient(circle at 0% 18%,#35121d 0,transparent 28%),var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+a{color:inherit;text-decoration:none}.wrap{width:min(1120px,92%);margin:auto}
+header{position:sticky;top:0;z-index:10;background:#080b12eF;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 0}.brand{font-size:1.25rem;font-weight:900;letter-spacing:.4px}.brand span{color:var(--red)}nav{display:flex;gap:18px;flex-wrap:wrap}nav a{font-size:.92rem;color:var(--muted)}nav a:hover{color:white}
+.hero{padding:76px 0 58px;display:grid;grid-template-columns:1.25fr .75fr;gap:30px;align-items:center}.eyebrow{color:#78b6ff;font-weight:700;text-transform:uppercase;letter-spacing:2px;font-size:.78rem}.hero h1{font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.04;margin:12px 0}.hero h1 span{color:var(--red)}.hero p{max-width:620px;color:var(--muted);font-size:1.08rem}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.btn{display:inline-block;padding:12px 19px;border-radius:10px;font-weight:800;background:linear-gradient(110deg,var(--red),#ff654d);color:white}.btn.alt{background:linear-gradient(110deg,#1769d2,var(--blue))}.hero-card{border:1px solid #334b6d;background:linear-gradient(145deg,#14243b,#101521 70%);border-radius:22px;padding:28px;box-shadow:0 18px 60px #0008}.hero-card .big{font-size:3.3rem}.hero-card h2{margin:4px 0}.hero-card p{font-size:.95rem}
+section{padding:42px 0}.section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:22px}.section-head h2{font-size:1.8rem;margin:0}.section-head p{color:var(--muted);margin:4px 0 0}.tag{font-size:.75rem;color:#a8ceff;border:1px solid #31547d;padding:5px 9px;border-radius:99px}
+.searchbar{width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:white;outline:none}.searchbar:focus{border-color:var(--blue)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.video{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.video iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#05070b}.video .info{padding:13px 15px}.video h3{font-size:1rem;margin:0 0 4px}.video p{margin:0;color:var(--muted);font-size:.86rem}.shorts-grid{grid-template-columns:repeat(3,1fr)}.shorts-grid iframe{aspect-ratio:9/16;max-height:470px}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.game{background:linear-gradient(145deg,#141e30,#0e1420);border:1px solid var(--line);padding:20px;border-radius:15px}.game .emoji{font-size:2rem}.game h3{margin:8px 0 4px}.game p{color:var(--muted);margin:0;font-size:.92rem}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:20px}.panel{background:var(--panel);border:1px solid var(--line);padding:24px;border-radius:17px}.panel p{color:var(--muted)}.friend{border-color:#315b8d;background:linear-gradient(130deg,#10213b,#111827)}
+.news-list{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.news{padding:18px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}.news p{margin:6px 0 0;color:var(--muted);font-size:.9rem}
+footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);text-align:center;margin-top:25px}.social{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}.social a{color:#9ccaff}
+.empty{display:none;color:var(--muted);padding:20px;text-align:center}
 
-        header {
-            background-color: #1f1f1f;
-            padding: 15px;
-            text-align: center;
-            border-bottom: 3px solid #ff4757;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.thumb-link{display:block;position:relative;aspect-ratio:16/9;overflow:hidden;background:#05070b}
+.thumb-link img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+.thumb-link:hover img{transform:scale(1.04)}
+.play-icon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#ff344fe8;color:white;font-size:22px;box-shadow:0 5px 24px #0009}
+.shorts-grid .thumb-link{aspect-ratio:9/16;max-height:470px}
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:50px}.grid,.shorts-grid,.games,.news-list{grid-template-columns:repeat(2,1fr)}.about{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}}
+@media(max-width:540px){.nav{align-items:flex-start;flex-direction:column}nav{gap:12px}.grid,.shorts-grid,.games,.news-list{grid-template-columns:1fr}.hero{padding-top:38px}.hero-card{padding:20px}}
 
-        .logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #ff4757, #ffa502);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
-        }
 
-        .logo-text {
-            color: #ffffff;
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-        }
+.games-site{display:none;background:#121212;color:#fff;min-height:100vh;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.games-site *{box-sizing:border-box;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.games-site .games-header{background:#1f1f1f;padding:15px;text-align:center;border-bottom:3px solid #ff4757;display:flex;flex-direction:column;align-items:center}
+.games-logo-container{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.games-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#ff4757,#ffa502);border-radius:8px;display:flex;justify-content:center;align-items:center;font-size:1.1rem;font-weight:900}
+.games-logo-text{color:#fff;font-size:1.6rem;font-weight:800;letter-spacing:2px}.games-logo-text span{color:#ff4757}
+.games-site .games-nav{display:flex;justify-content:center;gap:6px;margin-top:8px;flex-wrap:wrap}
+.games-site .games-nav button{background:#2f3542;color:#fff;border:0;padding:8px 14px;font-size:.9rem;border-radius:6px;cursor:pointer}
+.games-site .games-nav button.active{background:#ff4757}
+.games-site .games-main{flex:1;display:flex;justify-content:center;align-items:center;flex-direction:column;padding:15px;gap:18px}
+.games-site .game-card{display:none;background:#1f1f1f;padding:20px;border-radius:12px;text-align:center;max-width:360px;width:100%}
+.games-site .game-card.active{display:block}
+.games-site .score-display{font-size:1.1rem;margin-bottom:12px;color:#2ed573;font-weight:bold}
+.games-site .ttt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}
+.games-site .ttt-btn{background:#2f3542;aspect-ratio:1;border:0;border-radius:8px;font-size:2rem;font-weight:bold;color:#fff;cursor:pointer}
+.games-site canvas{background:#000;border:2px solid #2f3542;border-radius:8px;display:block;margin:0 auto;max-width:100%}
+.games-site .dpad-container{display:grid;grid-template-columns:repeat(3,50px);grid-template-rows:repeat(2,50px);gap:6px;justify-content:center;margin-top:15px}
+.games-site .ctrl-btn{background:#2f3542;color:white;border:0;border-radius:8px;font-size:1.2rem;cursor:pointer;display:flex;justify-content:center;align-items:center}
+.games-site .ctrl-btn:active,.games-site .jump-btn:active{background:#ff4757}
+.games-site .jump-btn{background:#2e86de;color:white;border:0;padding:15px;width:100%;border-radius:8px;font-size:1.1rem;font-weight:bold;margin-top:15px;cursor:pointer}
+.games-site .action-btn{background:#ff4757;color:white;border:0;padding:10px 20px;border-radius:6px;font-size:.95rem;margin-top:12px;cursor:pointer;font-weight:bold}
+.games-site .games-about{width:min(760px,calc(100% - 30px));margin:0 auto 25px;background:#1f1f1f;padding:22px;border-radius:12px;text-align:center;border:1px solid #343a46}
+.games-site .games-about p{color:#b8bec9;margin:8px 0 14px}
+.games-site .games-about a{display:inline-block;background:#2e86de;color:white;text-decoration:none;padding:10px 16px;border-radius:7px;font-weight:bold}
+.games-site .games-footer{text-align:center;padding:15px;background:#1f1f1f;color:#a4b0be;font-size:.85rem;margin-top:auto}
+.games-site .games-credit{font-size:.75rem;color:#747d8c;margin-top:4px}
+@media(max-width:540px){.games-site .games-main{padding:12px}.games-site .games-about{padding:18px}}
 
-        .logo-text span {
-            color: #ff4757;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        nav button {
-            background-color: #2f3542;
-            color: #ffffff;
-            border: none;
-            padding: 8px 14px;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        nav button.active {
-            background-color: #ff4757;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-
-        .game-card {
-            display: none;
-            background-color: #1f1f1f;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            max-width: 360px;
-            width: 100%;
-        }
-
-        .game-card.active {
-            display: block;
-        }
-
-        .score-display {
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            color: #2ed573;
-            font-weight: bold;
-        }
-
-        /* TIC TAC TOE */
-        .ttt-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 15px 0;
-        }
-
-        .ttt-btn {
-            background-color: #2f3542;
-            aspect-ratio: 1;
-            border: none;
-            border-radius: 8px;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ffffff;
-            cursor: pointer;
-        }
-
-        /* CANVAS AREA */
-        canvas {
-            background: #000;
-            border: 2px solid #2f3542;
-            border-radius: 8px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* DPAD CONTROLS */
-        .dpad-container {
-            display: grid;
-            grid-template-columns: repeat(3, 50px);
-            grid-template-rows: repeat(2, 50px);
-            gap: 6px;
-            justify-content: center;
-            margin-top: 15px;
-        }
-
-        .ctrl-btn {
-            background-color: #2f3542;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ctrl-btn:active {
-            background-color: #ff4757;
-        }
-
-        .jump-btn {
-            background-color: #2e86de;
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
-        .jump-btn:active {
-            background-color: #ff4757;
-        }
-
-        .action-btn {
-            background-color: #ff4757;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            margin-top: 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #1f1f1f;
-            color: #a4b0be;
-            font-size: 0.85rem;
-        }
-
-        .credit-tag {
-            font-size: 0.75rem;
-            color: #747d8c;
-            margin-top: 4px;
-        }
-    </style>
+</style>
 </head>
 <body>
+<div id="fc-site">
 
-    <header>
-        <div class="logo-container">
-            <div class="logo-icon">AS</div>
-            <div class="logo-text">AS <span>STUDIO</span></div>
-        </div>
+<header><div class="wrap nav">
+  <a class="brand" href="#home">FC <span>ADITYA</span> BD</a>
+  <nav aria-label="Main navigation">
+    <a href="#videos">Videos</a><a href="#shorts">Shorts</a><a href="#games">Games</a><a href="#news">Gaming News</a><a href="#about">About</a>
+  </nav>
+</div></header>
+<main>
+<div class="wrap">
+  <section class="hero" id="home">
+    <div>
+      <div class="eyebrow">Welcome to my gaming world</div>
+      <h1>PLAY. WATCH.<br><span>LEVEL UP.</span></h1>
+      <p>Welcome to Fc Aditya BD! Explore gaming videos, quick Shorts, useful game information and updates — all in one place.</p>
+      <div class="actions">
+        <a class="btn" href="https://www.youtube.com/results?search_query=Fc+Aditya+BD" target="_blank" rel="noopener">▶ Find My YouTube Channel</a>
+        <a class="btn alt" href="#videos">Explore Videos</a>
+      </div>
+    </div>
+    <div class="hero-card"><div class="big">🎮</div><h2>Gaming Hub</h2><p>FC Mobile • PUBG Mobile • Free Fire</p><span class="tag">GAMING • VIDEOS • GUIDES</span></div>
+  </section>
 
-        <nav>
-            <button id="nav-ttt" class="active" onclick="showTab('ttt')">Tic-Tac-Toe</button>
-            <button id="nav-snake" onclick="showTab('snake')">Snake</button>
-            <button id="nav-runner" onclick="showTab('runner')">Runner</button>
-        </nav>
-    </header>
+  <section id="videos">
+    <div class="section-head"><div><h2>Latest Videos</h2><p>Watch my gaming videos.</p></div><input id="videoSearch" class="searchbar" type="search" placeholder="Search videos..." aria-label="Search videos"></div>
+    <div class="grid searchable">
+      <article class="video" data-title="fc aditya bd gaming video 1"><a class="thumb-link" href="https://www.youtube.com/watch?v=Sj9iuqLKeMY" target="_blank" rel="noopener" aria-label="Watch Gaming Video 01"><img src="https://i.ytimg.com/vi/Sj9iuqLKeMY/hqdefault.jpg" alt="Gaming Video 01 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Gaming Video 01</h3><p>Watch on Fc Aditya BD</p></div></article>
+      <article class="video" data-title="fc aditya bd gaming video 2"><a class="thumb-link" href="https://www.youtube.com/watch?v=JuZS8g1puqI" target="_blank" rel="noopener" aria-label="Watch Gaming Video 02"><img src="https://i.ytimg.com/vi/JuZS8g1puqI/hqdefault.jpg" alt="Gaming Video 02 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Gaming Video 02</h3><p>Watch on Fc Aditya BD</p></div></article>
+    </div><p class="empty" id="videoEmpty">No matching videos found.</p>
+  </section>
 
-    <main>
-        <!-- 1. TIC TAC TOE -->
-        <div id="tab-ttt" class="game-card active">
-            <div id="ttt-msg" class="score-display">Your Turn (X)</div>
-            <div class="ttt-grid">
-                <button class="ttt-btn" onclick="playTTT(0)"></button>
-                <button class="ttt-btn" onclick="playTTT(1)"></button>
-                <button class="ttt-btn" onclick="playTTT(2)"></button>
-                <button class="ttt-btn" onclick="playTTT(3)"></button>
-                <button class="ttt-btn" onclick="playTTT(4)"></button>
-                <button class="ttt-btn" onclick="playTTT(5)"></button>
-                <button class="ttt-btn" onclick="playTTT(6)"></button>
-                <button class="ttt-btn" onclick="playTTT(7)"></button>
-                <button class="ttt-btn" onclick="playTTT(8)"></button>
-            </div>
-            <button class="action-btn" onclick="initTTT()">Restart Game</button>
-        </div>
+  <section id="shorts">
+    <div class="section-head"><div><h2>YouTube Shorts</h2><p>Quick gaming clips and highlights.</p></div><span class="tag">SHORT VIDEOS</span></div>
+    <div class="grid shorts-grid">
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/MtKqkEzWNis" target="_blank" rel="noopener" aria-label="Watch Gaming Short 1"><img src="https://i.ytimg.com/vi/MtKqkEzWNis/hqdefault.jpg" alt="Gaming Short 1 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 01</h3></div></article>
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/HkngHwFGwZo" target="_blank" rel="noopener" aria-label="Watch Gaming Short 2"><img src="https://i.ytimg.com/vi/HkngHwFGwZo/hqdefault.jpg" alt="Gaming Short 2 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 02</h3></div></article>
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/VhHSSNwt1Ys" target="_blank" rel="noopener" aria-label="Watch Gaming Short 3"><img src="https://i.ytimg.com/vi/VhHSSNwt1Ys/hqdefault.jpg" alt="Gaming Short 3 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 03</h3></div></article>
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/WC7oYWxMgRU" target="_blank" rel="noopener" aria-label="Watch Gaming Short 4"><img src="https://i.ytimg.com/vi/WC7oYWxMgRU/hqdefault.jpg" alt="Gaming Short 4 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 04</h3></div></article>
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/Wa20Q4sfMxQ" target="_blank" rel="noopener" aria-label="Watch Gaming Short 5"><img src="https://i.ytimg.com/vi/Wa20Q4sfMxQ/hqdefault.jpg" alt="Gaming Short 5 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 05</h3></div></article>
+      <article class="video"><a class="thumb-link" href="https://www.youtube.com/shorts/G6PQMM897AE" target="_blank" rel="noopener" aria-label="Watch Gaming Short 6"><img src="https://i.ytimg.com/vi/G6PQMM897AE/hqdefault.jpg" alt="Gaming Short 6 thumbnail" loading="lazy"><span class="play-icon">▶</span></a><div class="info"><h3>Short 06</h3></div></article>
+    </div>
+  </section>
 
-        <!-- 2. SNAKE GAME -->
-        <div id="tab-snake" class="game-card">
-            <div id="snake-score" class="score-display">Score: 0</div>
-            <canvas id="snakeCanvas" width="280" height="280"></canvas>
-            
-            <div class="dpad-container">
-                <div></div>
-                <button class="ctrl-btn" onclick="dirSnake('UP')">⬆️</button>
-                <div></div>
-                <button class="ctrl-btn" onclick="dirSnake('LEFT')">⬅️</button>
-                <button class="ctrl-btn" onclick="dirSnake('DOWN')">⬇️</button>
-                <button class="ctrl-btn" onclick="dirSnake('RIGHT')">➡️</button>
-            </div>
-            <button class="action-btn" onclick="initSnake()">Start / Reset</button>
-        </div>
+  <section id="games">
+    <div class="section-head"><div><h2>Games Information</h2><p>Explore the games featured on this website.</p></div></div>
+    <div class="games">
+      <article class="game"><div class="emoji">⚽</div><h3>EA SPORTS FC Mobile</h3><p>Football matches, player cards, team building, events and gameplay tips.</p></article>
+      <article class="game"><div class="emoji">🪖</div><h3>PUBG Mobile</h3><p>Battle royale gameplay, maps, modes, updates and beginner-friendly tips.</p></article>
+      <article class="game"><div class="emoji">🔥</div><h3>Free Fire</h3><p>Characters, maps, game modes, events and useful gameplay information.</p></article>
+    </div>
+  </section>
 
-        <!-- 3. RUNNER GAME -->
-        <div id="tab-runner" class="game-card">
-            <div id="runner-score" class="score-display">Score: 0</div>
-            <canvas id="runnerCanvas" width="280" height="150"></canvas>
-            <button class="jump-btn" onclick="jumpRunner()">JUMP 🦘</button>
-            <button class="action-btn" onclick="initRunner()">Start / Reset</button>
-        </div>
-    </main>
+  <section id="news">
+    <div class="section-head"><div><h2>Gaming News</h2><p>Check official sources for the latest announcements.</p></div></div>
+    <div class="news-list">
+      <article class="news"><strong>FC Mobile Updates</strong><p>Visit the official EA website for game updates and announcements.</p><a class="social" href="https://www.ea.com/games/ea-sports-fc/fc-mobile" target="_blank" rel="noopener">Official FC Mobile site ↗</a></article>
+      <article class="news"><strong>PUBG Mobile Updates</strong><p>Find official news, events and update information.</p><a class="social" href="https://www.pubgmobile.com/" target="_blank" rel="noopener">Official PUBG Mobile site ↗</a></article>
+      <article class="news"><strong>Free Fire Updates</strong><p>Visit the official Free Fire website for announcements.</p><a class="social" href="https://ff.garena.com/" target="_blank" rel="noopener">Official Free Fire site ↗</a></article>
+    </div>
+  </section>
 
-    <footer>
-        <div>&copy; 2026 AS Studio. All Rights Reserved.</div>
-        <div class="credit-tag">made by aditya</div>
-    </footer>
+  <section id="about">
+    <div class="section-head"><div><h2>About Me</h2><p>A little introduction.</p></div></div>
+    <div class="about">
+      <div class="panel"><h3>Welcome to Fc Aditya BD</h3><p>This is my gaming website. Here you can watch my YouTube videos and Shorts, explore information about popular mobile games and find official game update links. Thanks for visiting!</p><div class="social"><a href="https://www.youtube.com/results?search_query=Fc+Aditya+BD" target="_blank" rel="noopener">YouTube ↗</a></div><div class="social"><a href="#games-site" onclick="showSite('games');return false;">Visit AS Studio Games ↗</a></div></div>
+      <div class="panel friend"><h3>Play FC Mobile With Me!</h3><p>If you want to play FC Mobile with me, send me a friend request.</p><p><strong>In-game name:</strong> Adityajr10</p><a class="btn alt" href="https://www.ea.com/games/ea-sports-fc/fc-mobile" target="_blank" rel="noopener">FC Mobile Official Site</a></div>
+    </div>
+  </section>
+</div>
+</main>
+<footer><div class="wrap">© <span id="year"></span> Fc Aditya BD. All rights reserved.<br>Made for gaming fans.</div></footer>
 
-    <script>
-        // Global Navigation
-        function showTab(tabId) {
-            stopGames();
-            document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
 
-            document.getElementById('tab-' + tabId).classList.add('active');
-            document.getElementById('nav-' + tabId).classList.add('active');
+</div>
 
-            if (tabId === 'ttt') initTTT();
-            if (tabId === 'snake') initSnake();
-            if (tabId === 'runner') initRunner();
-        }
+<div class="games-site" id="games-site">
+<header class="games-header">
+  <div class="games-logo-container"><div class="games-logo-icon">AS</div><div class="games-logo-text">AS <span>STUDIO</span></div></div>
+  <nav class="games-nav">
+    <button id="games-nav-ttt" class="active" onclick="showGameTab('ttt')">Tic-Tac-Toe</button>
+    <button id="games-nav-snake" onclick="showGameTab('snake')">Snake</button>
+    <button id="games-nav-runner" onclick="showGameTab('runner')">Runner</button>
+  </nav>
+</header>
+<main class="games-main">
+  <div id="games-tab-ttt" class="game-card active">
+    <div id="ttt-msg" class="score-display">Your Turn (X)</div>
+    <div class="ttt-grid">
+      <button class="ttt-btn" onclick="playTTT(0)"></button><button class="ttt-btn" onclick="playTTT(1)"></button><button class="ttt-btn" onclick="playTTT(2)"></button>
+      <button class="ttt-btn" onclick="playTTT(3)"></button><button class="ttt-btn" onclick="playTTT(4)"></button><button class="ttt-btn" onclick="playTTT(5)"></button>
+      <button class="ttt-btn" onclick="playTTT(6)"></button><button class="ttt-btn" onclick="playTTT(7)"></button><button class="ttt-btn" onclick="playTTT(8)"></button>
+    </div>
+    <button class="action-btn" onclick="initTTT()">Restart Game</button>
+  </div>
+  <div id="games-tab-snake" class="game-card">
+    <div id="snake-score" class="score-display">Score: 0</div>
+    <canvas id="snakeCanvas" width="280" height="280"></canvas>
+    <div class="dpad-container">
+      <div></div><button class="ctrl-btn" onclick="dirSnake('UP')">⬆</button><div></div>
+      <button class="ctrl-btn" onclick="dirSnake('LEFT')">⬅</button><button class="ctrl-btn" onclick="dirSnake('DOWN')">⬇</button><button class="ctrl-btn" onclick="dirSnake('RIGHT')">➡</button>
+    </div>
+    <button class="action-btn" onclick="initSnake()">Start / Reset</button>
+  </div>
+  <div id="games-tab-runner" class="game-card">
+    <div id="runner-score" class="score-display">Score: 0</div>
+    <canvas id="runnerCanvas" width="280" height="150"></canvas>
+    <button class="jump-btn" onclick="jumpRunner()">JUMP</button>
+    <button class="action-btn" onclick="initRunner()">Start / Reset</button>
+  </div>
+</main>
+<section class="games-about">
+  <h2>About AS Studio</h2>
+  <p>Play quick mini games here: Tic-Tac-Toe, Snake and Runner. You can also visit my gaming hub for videos, Shorts, game information and gaming news.</p>
+  <a href="#fc-site" onclick="showSite('fc');return false;">Visit Fc Aditya BD Gaming Hub</a>
+</section>
+<footer class="games-footer"><div>© 2026 AS Studio. All Rights Reserved.</div><div class="games-credit">made by aditya</div></footer>
+</div>
 
-        function stopGames() {
-            if (snakeLoop) clearInterval(snakeLoop);
-            if (runnerLoop) clearInterval(runnerLoop);
-        }
+<script>
 
-        /* --- TIC TAC TOE ENGINE --- */
-        let board = ["","","","","","","","",""];
-        let tttActive = true;
+document.getElementById('year').textContent = new Date().getFullYear();
+const search = document.getElementById('videoSearch');
+search.addEventListener('input', () => {
+  const q = search.value.trim().toLowerCase();
+  const cards = [...document.querySelectorAll('.searchable .video')];
+  let shown = 0;
+  cards.forEach(card => {
+    const match = (card.dataset.title || '').includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) shown++;
+  });
+  document.getElementById('videoEmpty').style.display = shown ? 'none' : 'block';
+});
 
-        function initTTT() {
-            board = ["","","","","","","","",""];
-            tttActive = true;
-            document.getElementById('ttt-msg').textContent = "Your Turn (X)";
-            let btns = document.querySelectorAll('.ttt-btn');
-            btns.forEach(b => { b.textContent = ""; b.style.color = "#fff"; });
-        }
 
-        function playTTT(i) {
-            if (board[i] !== "" || !tttActive) return;
-            board[i] = "X";
-            updateTTTBoard();
+let board=["","","","","","","","",""],tttActive=true;
+let snake,food,sDir,snakeScore,snakeLoop,sCtx;
+let ry,rVel,obstacles,runnerScore,runnerLoop,rCtx;
 
-            if (checkTTTWin("X")) {
-                document.getElementById('ttt-msg').textContent = "You Win! 🎉";
-                tttActive = false;
-                return;
-            }
-            if (!board.includes("")) {
-                document.getElementById('ttt-msg').textContent = "Draw Game!";
-                tttActive = false;
-                return;
-            }
-
-            // AI Move
-            tttActive = false;
-            document.getElementById('ttt-msg').textContent = "AI Turn...";
-            setTimeout(() => {
-                let empty = board.map((v, idx) => v === "" ? idx : null).filter(v => v !== null);
-                if (empty.length > 0) {
-                    let move = empty[Math.floor(Math.random() * empty.length)];
-                    board[move] = "O";
-                    updateTTTBoard();
-
-                    if (checkTTTWin("O")) {
-                        document.getElementById('ttt-msg').textContent = "AI Wins! 🤖";
-                    } else if (!board.includes("")) {
-                        document.getElementById('ttt-msg').textContent = "Draw Game!";
-                    } else {
-                        document.getElementById('ttt-msg').textContent = "Your Turn (X)";
-                        tttActive = true;
-                    }
-                }
-            }, 250);
-        }
-
-        function updateTTTBoard() {
-            let btns = document.querySelectorAll('.ttt-btn');
-            btns.forEach((b, idx) => {
-                b.textContent = board[idx];
-                b.style.color = board[idx] === "X" ? "#ff4757" : "#ffa502";
-            });
-        }
-
-        function checkTTTWin(p) {
-            const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-            return wins.some(w => w.every(idx => board[idx] === p));
-        }
-
-        /* --- SNAKE ENGINE --- */
-        let snakeCanvas = document.getElementById("snakeCanvas");
-        let sCtx = snakeCanvas.getContext("2d");
-        let snake, food, sDir, snakeScore, snakeLoop;
-
-        function initSnake() {
-            stopGames();
-            snake = [{x: 140, y: 140}, {x: 120, y: 140}];
-            sDir = "RIGHT";
-            snakeScore = 0;
-            document.getElementById('snake-score').textContent = "Score: " + snakeScore;
-            spawnFood();
-            snakeLoop = setInterval(stepSnake, 130);
-        }
-
-        function dirSnake(d) {
-            if (d === "LEFT" && sDir !== "RIGHT") sDir = "LEFT";
-            if (d === "UP" && sDir !== "DOWN") sDir = "UP";
-            if (d === "RIGHT" && sDir !== "LEFT") sDir = "RIGHT";
-            if (d === "DOWN" && sDir !== "UP") sDir = "DOWN";
-        }
-
-        function spawnFood() {
-            food = {
-                x: Math.floor(Math.random() * 14) * 20,
-                y: Math.floor(Math.random() * 14) * 20
-            };
-        }
-
-        function stepSnake() {
-            let head = {x: snake[0].x, y: snake[0].y};
-            if (sDir === "LEFT") head.x -= 20;
-            if (sDir === "UP") head.y -= 20;
-            if (sDir === "RIGHT") head.x += 20;
-            if (sDir === "DOWN") head.y += 20;
-
-            if (head.x < 0 || head.x >= 280 || head.y < 0 || head.y >= 280 || snake.some(s => s.x === head.x && s.y === head.y)) {
-                stopGames();
-                document.getElementById('snake-score').textContent = "Game Over! Score: " + snakeScore;
-                return;
-            }
-
-            snake.unshift(head);
-            if (head.x === food.x && head.y === food.y) {
-                snakeScore += 10;
-                document.getElementById('snake-score').textContent = "Score: " + snakeScore;
-                spawnFood();
-            } else {
-                snake.pop();
-            }
-
-            sCtx.fillStyle = "#000";
-            sCtx.fillRect(0, 0, 280, 280);
-            sCtx.fillStyle = "#ff4757";
-            sCtx.fillRect(food.x, food.y, 18, 18);
-            sCtx.fillStyle = "#2ed573";
-            snake.forEach(s => sCtx.fillRect(s.x, s.y, 18, 18));
-        }
-
-        /* --- RUNNER ENGINE --- */
-        let runnerCanvas = document.getElementById("runnerCanvas");
-        let rCtx = runnerCanvas.getContext("2d");
-        let ry, rVel, obstacles, runnerScore, runnerLoop;
-
-        function initRunner() {
-            stopGames();
-            ry = 110;
-            rVel = 0;
-            obstacles = [];
-            runnerScore = 0;
-            document.getElementById('runner-score').textContent = "Score: " + runnerScore;
-            runnerLoop = setInterval(stepRunner, 30);
-        }
-
-        function jumpRunner() {
-            if (ry >= 110) rVel = -9;
-        }
-
-        function stepRunner() {
-            rVel += 0.6;
-            ry += rVel;
-            if (ry > 110) { ry = 110; rVel = 0; }
-
-            if (Math.random() < 0.02 && (obstacles.length === 0 || obstacles[obstacles.length - 1].x < 180)) {
-                obstacles.push({x: 280, w: 15, h: 20});
-            }
-
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].x -= 4;
-                if (obstacles[i].x + obstacles[i].w < 0) {
-                    obstacles.splice(i, 1);
-                    runnerScore += 1;
-                    document.getElementById('runner-score').textContent = "Score: " + runnerScore;
-                }
-                if (obstacles[i] && 40 < obstacles[i].x + obstacles[i].w && 60 > obstacles[i].x && ry + 20 > 130 - obstacles[i].h) {
-                    stopGames();
-                    document.getElementById('runner-score').textContent = "Game Over! Score: " + runnerScore;
-                    return;
-                }
-            }
-
-            rCtx.fillStyle = "#000";
-            rCtx.fillRect(0, 0, 280, 150);
-            rCtx.fillStyle = "#2f3542";
-            rCtx.fillRect(0, 130, 280, 20);
-            rCtx.fillStyle = "#ffa502";
-            rCtx.fillRect(40, ry, 20, 20);
-            rCtx.fillStyle = "#ff4757";
-            obstacles.forEach(o => rCtx.fillRect(o.x, 130 - o.h, o.w, o.h));
-        }
-
-        // Keyboard Binds
-        window.addEventListener("keydown", e => {
-            if (e.key === "ArrowUp") { dirSnake("UP"); jumpRunner(); }
-            if (e.key === "ArrowDown") dirSnake("DOWN");
-            if (e.key === "ArrowLeft") dirSnake("LEFT");
-            if (e.key === "ArrowRight") dirSnake("RIGHT");
-            if (e.key === " ") jumpRunner();
-        });
-
-        // Default Load
-        initTTT();
-    </script>
-</body>
-</html>
+function showSite(which){
+  stopGames();
+  document.getElementById("fc-site").style.display=which==="fc"?"block":"none";
+  document.getElementById("games-site").style.display=which==="games"?"flex":"none";
+  if(which==="games")initTTT();
+  window.scrollTo(0,0);
+}
+function showGameTab(tabId){
+  stopGames();
+  document.querySelectorAll(".games-site .game-card").forEach(c=>c.classList.remove("active"));
+  document.querySelectorAll(".games-site .games-nav button").forEach(b=>b.classList.remove("active"));
+  document.getElementById("games-tab-"+tabId).classList.add("active");
+  document.getElementById("games-nav-"+tabId).classList.add("active");
+  if(tabId==="ttt")initTTT();if(tabId==="snake")initSnake();if(tabId==="runner")initRunner();
+}
+function stopGames(){if(snakeLoop)clearInterval(snakeLoop);if(runnerLo
